@@ -1,0 +1,137 @@
+% Input encoding
+\usepackage[utf8]{inputenc}
+
+% Language settings
+\usepackage[english]{babel}
+
+% General page layout
+\usepackage[osf,sc]{mathpazo}
+\usepackage{courier}
+\renewcommand{\sfdefault}{uop}      % ---> URW Classico Optima Clone
+\renewcommand{\rmdefault}{pplj}     % ---> Mathpazo Palatino
+
+\linespread{1.05}
+\setlength{\parindent}{0pt} 
+\setlength{\parskip}{2ex}
+
+% General packages
+\usepackage{booktabs} 
+\usepackage{caption}                % extended customization of captions in floating environments
+\usepackage{changepage} 
+\usepackage{enumitem}               % costomizing lists
+\usepackage{graphicx}               % ‘extended’ or ‘enhanced’ graphics package.
+\usepackage{hyperref} 
+\usepackage{lipsum}                 % access to 150 paragraphs of Lorem ipsum dummy text
+\usepackage{url}
+% \usepackage[explicit]{titlesec}
+
+% Header
+\newcommand{\header}[3]{
+   \begin{minipage}[t]{0.4\textwidth}
+      \small #1
+   \end{minipage}
+   \begin{minipage}[t]{0.2\linewidth}
+      \centering   \small #2
+   \end{minipage}
+   \begin{minipage}[t]{0.4\textwidth}
+      \small  \hfill #3 
+   \end{minipage}}
+
+\newcommand{\ueberschrift}[2]{
+\vspace{3em}  
+\begin{center}
+\Large #1
+
+\large #2 
+\end{center}
+\vspace{2em} }
+
+% Emphesis
+\newcommand{\bi}[1]{\textbf{\textit{#1}}}
+
+% Bigger Parethesis
+\newcommand{\vast}{\bBigg@{4}}
+\newcommand{\Vast}{\bBigg@{5}}
+
+% Math related packages
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{slashed}
+% \usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{stmaryrd}
+\usepackage[osf,sc]{mathpazo}
+
+% Physics related packages
+\usepackage{siunitx} 
+
+% Math related definitions
+\newcommand{\mat}[1]{\begin{pmatrix}#1\end{pmatrix}} % no delimiters
+\newcommand{\mate}[1]{\begin{matrix}#1\end{matrix}}
+
+
+\newcommand{\pd}[1]{\dfrac{\partial}{\partial #1}} % TODO: find out why this does not work!
+\newcommand{\pdd}[1]{\dfrac{\partial^2}{\partial #1^2}}
+\newcommand{\pddd}[1]{\dfrac{\partial^3}{\partial #1^3}}
+
+\renewcommand{\d}[1]{\dfrac{\textrm{d}}{\textrm{d} #1}} % TODO: find out why this does not work!
+\newcommand{\dd}[1]{\dfrac{\textrm{d}^2}{\textrm{d} #1^2}}
+\newcommand{\ddd}[1]{\dfrac{\textrm{d}^3}{\textrm{d} #1^3}}
+
+\newcommand{\df}[1]{\textrm{d}#1~}
+\newcommand{\dff}[2]{\textrm{d}^{#2}#1~}
+
+
+\renewcommand{\l}{\left}
+\renewcommand{\r}{\right}
+\newcommand{\ub}{\underbrace}
+
+\def\MdK{\ensuremath{\mathbb{K}}}
+\def\MdC{\ensuremath{\mathbb{C}}}
+\def\MdR{\ensuremath{\mathbb{R}}}
+\def\MdN{\ensuremath{\mathbb{N}}}
+\def\MdZ{\ensuremath{\mathbb{Z}}}
+\def\Md1{\ensuremath{\mathbb{1}}}
+
+
+\renewcommand{\v}{\vec}
+\newcommand{\x}{\times}
+\renewcommand{\.}{\cdot}
+\newcommand{\f}[1]{\dfrac{#1}}
+
+% Quantum mechanics
+\newcommand{\me}[3]{\langle #1 | #2| #3\rangle}
+\newcommand{\bc}[2]{\langle #1 | #2\rangle}
+\renewcommand{\sp}[2]{\left\langle #1, #2\right\rangle}
+\newcommand{\ew}[1]{\langle #1 \rangle}
+\newcommand{\bra}[1]{\langle #1|}
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+\newcommand{\grad}{\vec{\nabla}}
+\newcommand{\laplace}{\vec{\nabla}^2}
+
+\def\cH{\mathcal{H}}
+\def\cT{\mathcal{T}}
+\def\cO{\mathcal{O}}
+\def\cP{\mathcal{P}}
+\def\cL{\mathcal{L}}
+
+% Quantum field theory
+\renewcommand{\L}{\Lambda}
+
+% Statistics
+\newcommand{\Var}{\textrm{Var}}
+
+% theorem environments
+\usepackage{ntheorem}
+
+
+\theoremstyle{break}
+\theorembodyfont{\normalfont}
+\theoremstyle{nonumberbreak}
+
+\newtheorem{plaindefinition}{Definition}
+\newenvironment{definition}{\begin{plaindefinition}}{\end{plaindefinition}}
+\newenvironment{definition*}{\begin{plaindefinition*}}{\end{plaindefinition*}}
