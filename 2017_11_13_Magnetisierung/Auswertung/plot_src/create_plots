@@ -1,0 +1,158 @@
+#!/usr/bin/env python
+
+import os
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import sys
+
+from matplotlib import rcParams
+
+DATA_PATH = '../data'
+PLOTS_PATH = '../plots'
+CALC_PATH = '../calc'
+
+sys.path.append(os.path.join(os.path.dirname(__file__), CALC_PATH))
+import calibration_squid_solenoid
+
+# set plot styles
+plt.rc('text', usetex=True)
+rcParams.update({'figure.autolayout': True})
+
+
+def read_data(filename, names=['temperature', 'voltage'], decimal=',',
+              comment='#'):
+    """
+    Reads a data file and returns the resulting Pandas Dataframe.
+    """
+    return pd.read_table(
+        os.path.join(os.path.dirname(__file__), DATA_PATH, filename),
+        delim_whitespace=True,
+        names=names,
+        decimal=decimal,
+        comment=comment
+    )
+
+
+def create_diagram(df, filename, x='temperature', y='voltage',
+                   xlabel=None, ylabel=None, extension='.eps',
+                   regression=None, **kwargs):
+    pd.options.display.mpl_style = 'default'
+    plot = df.plot(
+        x=x,
+        y=y,
+        legend=False,
+        style='k--',
+        **kwargs)
+
+    plot.set_xlabel(xlabel)
+    plot.set_ylabel(ylabel)
+
+    if regression:
+        plot.plot(*regression, color='red')
+
+    fig = plot.get_figure()
+    fig.savefig(os.path.join(PLOTS_PATH, filename + extension))
+
+
+## 1. Calibration
+
+# 1.1 Solenoid
+i_min = 0
+i_max = 400
+
+df = read_data('1_a_soneloid.dat',
+               names=['current', 'voltage_min', 'voltage_max'])
+df['voltage_mean'] = 0.5 * (df['voltage_min'] + df['voltage_max'])
+df['voltage_error'] = df['voltage_max'] - df['voltage_min']
+
+# add subplot for regression function
+x = np.array(df['current'])
+y = np.array(df['voltage_mean'])
+sy = np.array(df['voltage_error'])
+
+x_fit = np.linspace(i_min, i_max, 1000)
+y_fit = calibration_squid_solenoid.regression_func(
+    calibration_squid_solenoid.voltage_current_regression().beta, x_fit)
+plt.errorbar(x, y, yerr=sy, linestyle='None', marker='x')
+
+
+create_diagram(
+    df,
+    '1_a_solenoid_calibration',
+    x='current', y='voltage_mean',
+    xlabel='current in m$A$',
+    ylabel='voltage in m$V$',
+    regression=(x_fit, y_fit),
+    yerr='voltage_error',
+    xlim=(0, 400)
+)
+
+
+# 2. Terbium
+names = ['2_a_1_terbium_perpendicular_0G.dat',
+         '2_a_2_terbium_perpendicular_150G.dat',
+         '2_a_3_terbium_perpendicular_150G.dat']
+
+for name in ['2_a_1_terbium_perpendicular_0G.dat',
+             '2_a_2_terbium_perpendicular_150G.dat',
+             '2_a_3_terbium_perpendicular_150G.dat']:
+    df = read_data(name)
+    create_diagram(df, name.replace('.dat', ''),
+                   xlabel=r'Temperatur in $K$',
+                   ylabel=r'Spannung in $V$')
+
+
+# together in one diagram
+calibration_magnetisation = 476171.48554337  # in A/(mV)
+calibration_magnetic_field = 0.8673978066    # in G/V
+
+dfs = [read_data(name) for name in names]
+for df in dfs:
+    df['magnetisation'] = df['voltage'] * calibration_magnetisation
+    df['magnetic_field'] = df['voltage'] * calibration_magnetic_field
+
+fig = plt.figure()
+
+for df in dfs:
+    plt.plot(df['temperature'], df['voltage'])
+
+plt.xlim(70, 270)
+plt.ylim(0, 2)
+plt.show()
+
+
+
+
+    
+# np_values = [(np.array(df['temperature']), np.array(df['magnetisation']))
+#              for df in dfs]
+# 
+# pd.options.display.mpl_style = 'default'
+# 
+# plot = plt.plot(np_values[0][0], np_values[0][1], 'r--',
+#                 np_values[1][0], np_values[1][1], 'bs',
+#                 np_values[2][0], np_values[2][1], 'g^')
+# plot.set_xlabel('Temperatur in K')
+# plot.set_ylabel('Magnetisierung in A/m')
+# fig = plot.get_figure()
+fig.savefig(os.path.join(PLOTS_PATH, '2_a.eps'))
+
+
+plt.show()
+# 
+# plot = df.plot(
+#     x=x,
+#     y=y,
+#     legend=False,
+#     **kwargs)
+# 
+# plot.set_xlabel(xlabel)
+# plot.set_ylabel(ylabel)
+# 
+# if regression:
+#     plot.plot(*regression, color='red')
+#     
+# fig = plot.get_figure()
+# fig.savefig(os.path.join(PLOTS_PATH, filename + extension))
+
